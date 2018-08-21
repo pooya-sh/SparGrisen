@@ -13,5 +13,9 @@ public class SpargrisenApplicationTests {
     public void contextLoads() {
 
     }
+    @Test
+    public void dbConnectionTest(){
+
+    }
 
 }
