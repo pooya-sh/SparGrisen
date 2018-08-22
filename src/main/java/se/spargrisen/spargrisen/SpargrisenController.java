@@ -30,7 +30,7 @@ public class SpargrisenController {
 
     @PostMapping("/login")
     public String submit(HttpSession session, @RequestParam String username, @RequestParam String password) {
-        if (username.equalsIgnoreCase("") && password.equalsIgnoreCase("") ) {
+        if (username.equalsIgnoreCase("emma") && password.equalsIgnoreCase("12345") ) {
             session.setAttribute("user", username);
             return "homepage";
         }
