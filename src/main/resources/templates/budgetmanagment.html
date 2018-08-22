@@ -6,16 +6,34 @@
 </head>
 <body>
 <h1>Skapa din budget</h1>
-<div><h3>Fyll i din inkomst</h3>
-
+<div th:if="${income == null}">
+    <h3>Fyll i din inkomst</h3>
     <form action="/budget" method="post">
-    <div class="form-group">
-    <label>Summa:</label>
-        <input type="text"/>
-<input type="submit" value="Lägg till"/>
+        <div class="form-group">
+            <label>Summa:</label>
+            <input type="text" name="income"/>
+            <input type="submit" value="Lägg till"/>
+        </div>
+    </form>
 </div>
-    </form></div>
 
-<h4 th:text= "${income} + 'kr'"></h4>
+<h4 th:if="${income != null} " th:text="'Du har: ' + ${income} + ' kr'"></h4>
+
+<div th:if="${income != null}">
+    <h3>Dela upp din inkomst i budgetkategorier</h3>
+    <form action="/budget" method="post">
+        <div class="form-group">
+            <select>
+                <option th:each="Category : ${Categories}" th:value="${Category}" th:text="${Category}"></option>
+            </select>
+            <label>Summa:</label>
+            <input type="text" name="partsum"/>
+            <input type="submit" value="Lägg till"/>
+        </div>
+    </form>
+</div>
+
+<h4 th:if="${partsum != null} " th:text="'Du har: ' + ${partsum} + ' kr'"></h4>
+
 </body>
 </html>
