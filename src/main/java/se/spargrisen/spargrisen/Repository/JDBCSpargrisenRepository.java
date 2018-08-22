@@ -11,7 +11,6 @@ import java.util.ArrayList;
 @Component
 public class JDBCSpargrisenRepository implements SpargrisenRepository {
 
-
 //    @Override
 //    public List<??> ??() {
 //        try (Connection conn = ???.getConnection();
@@ -24,7 +23,6 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 //            throw new BlogRepositoryException(e);
 //        }
 //    }
-
 
 }
 

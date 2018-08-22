@@ -49,7 +49,6 @@ public class SpargrisenController {
 //        SpringApplication.run(SpargrisenController.class, args);
 //    }
 
-
     @GetMapping("/budget")
     public ModelAndView budget () {
         return new ModelAndView("budgetmanagment");
