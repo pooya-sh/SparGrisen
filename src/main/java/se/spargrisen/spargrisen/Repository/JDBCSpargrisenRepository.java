@@ -24,4 +24,6 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 //        }
 //    }
 
+
 }
+

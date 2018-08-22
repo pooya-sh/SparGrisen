@@ -15,37 +15,37 @@ import javax.servlet.http.HttpSession;
 public class SpargrisenController {
 
     @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session, HttpServletResponse res) {
-        session.invalidate();
-        Cookie cookie = new Cookie("JSESSIONID", "");
-        cookie.setMaxAge(0);
-        res.addCookie(cookie);
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String submit(HttpSession session, @RequestParam String username, @RequestParam String password) {
-        if (username.equalsIgnoreCase("") && password.equalsIgnoreCase("") ) {
-            session.setAttribute("user", username);
-            return "homepage";
-        }
-        return "login";
-    }
-
-    @GetMapping("/homepage")
-    public ModelAndView homepage(HttpSession session) {
-//session.setAttribute("user", );
-        if (session.getAttribute("user") != null) {
-            return new ModelAndView("homepage");
-        }
+    public ModelAndView login() {
         return new ModelAndView("login");
     }
-    public static void main(String[] args) {
-        SpringApplication.run(SpargrisenController.class, args);
-    }
+
+//    @GetMapping("/logout")
+//    public String logout(HttpSession session, HttpServletResponse res) {
+//        session.invalidate();
+//        Cookie cookie = new Cookie("JSESSIONID", "");
+//        cookie.setMaxAge(0);
+//        res.addCookie(cookie);
+//        return "login";
+//    }
+//
+//    @PostMapping("/login")
+//    public String submit(HttpSession session, @RequestParam String username, @RequestParam String password) {
+//        if (username.equalsIgnoreCase("") && password.equalsIgnoreCase("") ) {
+//            session.setAttribute("user", username);
+//            return "homepage";
+//        }
+//        return "login";
+//    }
+//
+//    @GetMapping("/homepage")
+//    public ModelAndView homepage(HttpSession session) {
+////session.setAttribute("user", );
+//        if (session.getAttribute("user") != null) {
+//            return new ModelAndView("homepage");
+//        }
+//        return new ModelAndView("login");
+//    }
+//    public static void main(String[] args) {
+//        SpringApplication.run(SpargrisenController.class, args);
+//    }
 }
