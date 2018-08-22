@@ -64,17 +64,9 @@ public class SpargrisenController {
                 .addObject("Categories", Categories.values());
     }
 
-    @GetMapping("/budgetCategory")
-    public ModelAndView budgetCategory() {
-        return new ModelAndView("budgetmanagment");
-    }
-
-    @PostMapping("/budgetCategory")
-    public ModelAndView budgetCategory(@RequestParam String partsum) {
+    @PostMapping("/budget/partofsum")
+    public ModelAndView partofsum (@RequestParam String partsum) {
         return new ModelAndView("budgetmanagment")
-                .addObject("partsum", partsum);
+                .addObject
     }
-    
-
-
 }

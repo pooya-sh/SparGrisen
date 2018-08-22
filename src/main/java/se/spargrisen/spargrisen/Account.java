@@ -22,6 +22,11 @@ public class Account {
             System.out.println("Balance is too low.");
     }
 
+    public double deposit (double income) {
+        balance += income;
+        return balance;
+    }
+
     public double getBalance() {
         return balance;
     }
