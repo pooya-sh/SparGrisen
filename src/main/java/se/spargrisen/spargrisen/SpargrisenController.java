@@ -48,4 +48,20 @@ public class SpargrisenController {
 //    public static void main(String[] args) {
 //        SpringApplication.run(SpargrisenController.class, args);
 //    }
+
+
+    @GetMapping("/budget")
+    public ModelAndView budget () {
+        return new ModelAndView("budgetmanagment");
+    }
+
+    @PostMapping("/budget")
+    public ModelAndView budget (@RequestParam String income)
+    {
+
+        return new ModelAndView("budgetmanagment")
+                .addObject("income", income);
+    }
+
+
 }
