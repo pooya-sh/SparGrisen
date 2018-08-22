@@ -1,16 +1,17 @@
-//package se.spargrisen.spargrisen.Repository;
-//
-//import org.springframework.stereotype.Component;
-//
-//import java.sql.Connection;
-//import java.sql.ResultSet;
-//import java.sql.SQLException;
-//import java.sql.Statement;
-//import java.util.ArrayList;
-//
-//@Component
-//public class JDBCSpargrisenRepository implements SpargrisenRepository {
-//
+package se.spargrisen.spargrisen.Repository;
+
+import org.springframework.stereotype.Component;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+@Component
+public class JDBCSpargrisenRepository implements SpargrisenRepository {
+
+
 //    @Override
 //    public List<??> ??() {
 //        try (Connection conn = ???.getConnection();
@@ -23,5 +24,8 @@
 //            throw new BlogRepositoryException(e);
 //        }
 //    }
-//
-//}
+
+
+}
+
+

@@ -8,21 +8,52 @@
 </head>
 <body>
 <h1>Välkommen till Spargrisen</h1>
-<img src="piggybank.jpg" height="340" width="519" alt="Spargris"/>
+<img src="..\src\main\resources\img\piggybank.jpg" height="340" width="519" alt="Spargris"/>
 
 <div>
     <form action="/" method="post">
-        Category: <select>
+        Kategori: <select>
             <option value="Boende">Boende</option>
             <option value="Transport">Transport</option>
             <option value="Shopping">Shopping</option>
             <option value="Livsmedel">Livsmedel</option>
         </select>
-        Amount: <input name="text" type="text"/>
+        Summa: <input name="text" type="text"/>
         <input type="hidden" name="Id" th:value="${blog.id}"/>
         <input type="hidden" name="postId" th:value="${post.id}"/>
-        <input type="submit" value="Add"/>
+        <input type="submit" value="Lägg till"/>
     </form>
+    <h2></h2>
+
+    <table style="width:100%">
+        <tr>
+            <th>Kategorier</th>
+            <th>Summa</th>
+            <th>Spenderat</th>
+            <th>Saldo</th>
+            <th>Statusemoji</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>
