@@ -10,6 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class SpargrisenController {
@@ -50,17 +52,28 @@ public class SpargrisenController {
 //    }
 
     @GetMapping("/budget")
-    public ModelAndView budget () {
+    public ModelAndView budget() {
         return new ModelAndView("budgetmanagment");
     }
 
     @PostMapping("/budget")
-    public ModelAndView budget (@RequestParam String income)
-    {
-
+    public ModelAndView budget(@RequestParam String income) {
         return new ModelAndView("budgetmanagment")
-                .addObject("income", income);
+                .addObject("income", income)
+                .addObject("Categories", Categories.values());
     }
+
+    @GetMapping("/budgetCategory")
+    public ModelAndView budgetCategory() {
+        return new ModelAndView("budgetmanagment");
+    }
+
+    @PostMapping("/budgetCategory")
+    public ModelAndView budgetCategory(@RequestParam String partsum) {
+        return new ModelAndView("budgetmanagment")
+                .addObject("partsum", partsum);
+    }
+    
 
 
 }
