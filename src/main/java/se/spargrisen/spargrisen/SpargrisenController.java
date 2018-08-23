@@ -65,7 +65,6 @@ public class SpargrisenController {
 
     @PostMapping("/budget/partofsum")
     public ModelAndView partofsum (@RequestParam String partsum) {
-        return new ModelAndView("budgetmanagment")
-                .addObject
+        return new ModelAndView("budgetmanagment");
     }
 }
