@@ -3,6 +3,7 @@ package se.spargrisen.spargrisen.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
+import se.spargrisen.spargrisen.Account;
 import se.spargrisen.spargrisen.Category;
 import se.spargrisen.spargrisen.User;
 
@@ -87,6 +88,23 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 
     }
 
+    @Override
+    public Account getAccount(int userId) {
+        try (Connection conn = dataSource.getConnection();
+             Statement statement = conn.createStatement();
+             PreparedStatement ps = conn.prepareStatement("SELECT a.account_ID, a.balance FROM accounts a WHERE a.user_ID = ?")) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) throw new SpargrisenRepositoryExeption("No account that matches ID: " + userId);
+                return rsAccount(rs);
+
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+
+    }
+
+
     private Category rsCategory(ResultSet rs) throws SQLException {
         return new Category(
                 rs.getInt("category_id"),
@@ -119,6 +137,14 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
                 rs.getString("username")
         );
     }
+    private Account rsAccount(ResultSet rs) throws SQLException {
+        return new Account(
+                rs.getInt("accountID"),
+                rs.getDouble("balance")
+        );
+
+    }
+
 }
 
 
