@@ -9,6 +9,7 @@ public class Account {
     private double balance;
     public List<Integer> transactions = new ArrayList<>();
 
+    public Account(){}
     public Account(String name, double balance) {
         this.name = name;
         this.balance = balance;
@@ -22,10 +23,7 @@ public class Account {
             System.out.println("Balance is too low.");
     }
 
-    public double deposit (double income) {
-        balance += income;
-        return balance;
-    }
+
 
     public double getBalance() {
         return balance;
