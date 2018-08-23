@@ -124,9 +124,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
                 rs.getInt("account_ID"),
                 rs.getDouble("balance")
         );
-
     }
-
 }
 
 
