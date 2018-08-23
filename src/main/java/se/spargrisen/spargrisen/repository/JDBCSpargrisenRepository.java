@@ -1,18 +1,14 @@
-package se.spargrisen.spargrisen.Repository;
+package se.spargrisen.spargrisen.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-import se.spargrisen.spargrisen.Account;
-import se.spargrisen.spargrisen.Category;
-import se.spargrisen.spargrisen.User;
+import se.spargrisen.spargrisen.*;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Component
@@ -49,7 +45,26 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 
     @Override
     public List<Budget> getBudgets(int user_ID) {
-        return null;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT b.budget_ID, b.category_ID, b.ammount, b.budget_date, c.name " +
+                             "FROM budgets AS b " +
+                             "INNER JOIN categories AS c ON b.category_ID = c.category_ID " +
+                             "WHERE b.user_ID = ?")) {
+            ps.setInt(1, user_ID);
+            ResultSet rs = ps.executeQuery();
+            List<Budget> budgets = new ArrayList<>();
+            while (rs.next()) {
+                budgets.add(rsBudget(rs));
+            }
+            if (budgets.size() > 0) {
+                return budgets;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
     }
 
 
@@ -172,7 +187,6 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
         } catch (SQLException e) {
             throw new SpargrisenRepositoryExeption(e);
         }
-
     }
 
     @Override
@@ -190,7 +204,69 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
         } catch (SQLException e) {
             throw new SpargrisenRepositoryExeption(e);
         }
+    }
 
+    @Override
+    public boolean registerNewBudget(int user_ID, Budget budget) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO budgets (budgets.user_ID, budgets.ammount, " +
+                     "budgets.budget_date, budgets.category_ID)" +
+                     " VALUES (?,?,?,?)")) {
+            ps.setInt(1, user_ID);
+            ps.setDouble(2, budget.getAmmount());
+            ps.setDate(3, Date.valueOf(budget.getBudget_date()));
+            ps.setInt(4, budget.getCategory_ID());
+            int rs = ps.executeUpdate();
+            if (rs <= 0) {
+                throw new SpargrisenRepositoryExeption("Could not create budget entry");
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+    }
+
+    @Override
+    public boolean updateBudget(int user_ID, Budget budget) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE budgets " +
+                     "SET ammount = ?, budget_date = ?, category_ID = ? " +
+                     "WHERE budget_ID = ?")) {
+            ps.setDouble(1, budget.getAmmount());
+            ps.setDate(2, Date.valueOf(budget.getBudget_date()));
+            ps.setInt(3, budget.getCategory_ID());
+            ps.setInt(4, budget.getBudget_ID());
+            int rs = ps.executeUpdate();
+            if (rs <= 0) {
+                throw new SpargrisenRepositoryExeption("Could not update budget entry");
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+    }
+
+    @Override
+    public Budget budgetExist(LocalDate budget_date, int user_ID, int category_ID) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT *, c.name " +
+                     "FROM budgets AS b " +
+                     "INNER JOIN categories AS c ON b.category_ID = c.category_ID " +
+                     "WHERE b.budget_date = ? AND b.user_ID = ? AND b.category_ID = ?")) {
+            ps.setDate(1, Date.valueOf(budget_date));
+            ps.setInt(2, user_ID);
+            ps.setInt(3, category_ID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rsBudget(rs);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
     }
 
     private User rsUser(ResultSet rs) throws SQLException {
@@ -216,6 +292,16 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
                 rs.getDouble("ammount"),
                 rs.getString("description"),
                 rs.getString("name")
+        );
+    }
+
+    private Budget rsBudget(ResultSet rs) throws SQLException {
+        return new Budget(
+            rs.getInt("budget_ID"),
+            rs.getInt("category_ID"),
+            rs.getDouble("ammount"),
+            rs.getDate("budget_date").toLocalDate(),
+            rs.getString("name")
         );
     }
 }

@@ -1,4 +1,4 @@
-package se.spargrisen.spargrisen.Repository;
+package se.spargrisen.spargrisen.repository;
 
 public class SpargrisenRepositoryExeption extends RuntimeException {
 
