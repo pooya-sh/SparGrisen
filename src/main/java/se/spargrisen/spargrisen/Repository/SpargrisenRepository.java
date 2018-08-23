@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SpargrisenRepository {
 
-    void deposit(double income, int id);
+    double deposit(double income, int id);
     List<Category> getCategories(int userId);
     List<Category> getAllCategories();
     Account getAccount(int userId);

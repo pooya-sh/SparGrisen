@@ -36,16 +36,24 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 //    }
 
     @Override
-    public void deposit(double income, int id) {
+    public double deposit(double income, int id) {
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement();
-             PreparedStatement ps = conn.prepareStatement("SELECT balance + income FROM accounts where account_id= ?")) {
-            ps.setInt(1, id);
+             PreparedStatement ps = conn.prepareStatement("SELECT balance + ? as newbalance FROM accounts where account_id = ?")) {
+            ps.setDouble(1, income);
+            ps.setInt(2, id);
             ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("newbalance");
+            }
+            else {
+                throw new Exception("Didn't find balance.");
+            }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new SpargrisenRepositoryExeption(e);
         }
+
     }
 
 
@@ -139,7 +147,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     }
     private Account rsAccount(ResultSet rs) throws SQLException {
         return new Account(
-                rs.getInt("accountID"),
+                rs.getInt("account_ID"),
                 rs.getDouble("balance")
         );
 
