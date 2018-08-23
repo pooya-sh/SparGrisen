@@ -8,18 +8,23 @@
 </head>
 <body>
 <div class="container">
-    <header class="row bg-success text-white">
-        <div class="col-3">
-            <img src="..\src\main\resources\img\piggybank.jpg" height="100" width="175" alt="Spargris" />
+    <header>
+        <div class="row bg-success text-white d-flex align-items-end">
+            <div class="col-2">
+                <img src="..\src\main\resources\img\piggybank.jpg" height="100" width="175" alt="Spargris"/>
+            </div>
+            <div class="col-8">
+                <h1>Välkommen till Spargrisen</h1>
+            </div>
+            <div class="col-2">
+                <p th:text="'Hej ' + ${user_name} + '!'"></p>
+            </div>
         </div>
-        <div class="col-3">
-            <button type="button" onClick="location.href='/budget.html'">Skapa din budget</button>
-        </div>
-        <div class="col-4">
-            <h1>Välkommen till Spargrisen</h1>
-        </div>
-        <div class="col-2">
-            <p th:text="'Hej ' + ${user_name} + '!'"></p>
+        <div class="row">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex flex-row-reverse col-12">
+                <button class="p-2 btn btn-light" type="button" onClick="location.href='/logout.html'">Logga ut</button>
+                <button class="p-2 btn btn-light" type="button" onClick="location.href='/budget.html'">Skapa din budget</button>
+            </nav>
         </div>
     </header>
     <section>
@@ -83,23 +88,23 @@
                     <input type="hidden" name="account_ID"/>
                     <table class="table">
                         <thead>
-                            <th scope="col">
-                                <input type="date"/>
-                            </th>
-                            <th scope="col">
-                                <select>
-                                    <option value="Boende">Boende</option>
-                                    <option value="Transport">Transport</option>
-                                    <option value="Shopping">Shopping</option>
-                                    <option value="Livsmedel">Livsmedel</option>
-                                </select>
-                            </th>
-                            <th scope="col">
-                                <input name="ammount" type="number"/>
-                            </th>
-                            <th scope="col">
-                                <input name="description"/>
-                            </th>
+                        <th scope="col">
+                            <input type="date"/>
+                        </th>
+                        <th scope="col">
+                            <select>
+                                <option value="Boende">Boende</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Livsmedel">Livsmedel</option>
+                            </select>
+                        </th>
+                        <th scope="col">
+                            <input name="ammount" type="number"/>
+                        </th>
+                        <th scope="col">
+                            <input name="description"/>
+                        </th>
                         </thead>
                         <tr>
                             <td>
