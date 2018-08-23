@@ -2,7 +2,6 @@ package se.spargrisen.spargrisen;
 
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import se.spargrisen.spargrisen.Repository.JDBCSpargrisenRepository;
 import se.spargrisen.spargrisen.Repository.Transaction;
+
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -75,16 +75,25 @@ public class SpargrisenController {
 
     @PostMapping("/budget")
     public ModelAndView budget(@RequestParam String income) {
+        Map<String, Integer> budgettable = new HashMap<>();
+        budgettable.put("Boende", 5000);
+        budgettable.put("Livsmedel", 2000);
+        budgettable.put("Avgifter", 100);
+        budgettable.put("Telefoni", 1500);
+        budgettable.put("Nöje", 260);
+        budgettable.put("Övrigt", 5400);
 
         return new ModelAndView("budgetmanagment")
                 .addObject("income", income)
-                .addObject("Categories", Categories.values());
+                .addObject("Categories", repository.getAllCategories())
+                .addObject("budgettable", budgettable);
     }
 
     @PostMapping("/budget/partofsum")
     public ModelAndView partofsum(@RequestParam String partsum) {
 
         return new ModelAndView("budgetmanagment");
-
     }
+
+
 }

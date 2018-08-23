@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Budget hantering</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
+          integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous"/>
 </head>
 <body>
+<img src="..\src\main\resources\img\piggybank.jpg" height="170" width="259" alt="Spargris"/>
 <h1>Skapa din budget</h1>
 <div th:if="${income == null}">
     <h3>Fyll i din inkomst</h3>
@@ -22,14 +25,21 @@
 <div th:if="${income != null}">
     <h3>Dela upp din inkomst i budgetkategorier</h3>
     <form action="/budget" method="post">
-        <div class="form-group">
-            <select>
-                <option th:each="Category : ${Categories}" th:value="${Category}" th:text="${Category}"></option>
-            </select>
-            <label>Summa:</label>
-            <input type="text" name="partsum"/>
-            <input type="submit" value="Lägg till"/>
-        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Kategori</th>
+                <th scope="col">Summa</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="Entry : ${budgettable}">
+                <th scope="row"><label th:text="${Entry.key}"></label></th>
+                <td> <input type="text" name="partsum" th:value="${Entry.value}"/></td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="submit" value="Lägg till alla"/>
     </form>
 </div>
 
