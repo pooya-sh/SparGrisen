@@ -24,7 +24,7 @@
     <form action="/budget" method="post">
         <div class="form-group">
             <select>
-                <option th:each="Category : ${Categories}" th:value="${Category}" th:text="${Category}"></option>
+                <option th:each="Category : ${Categories}" th:value="${Category.ID}" th:text="${Category.NAME}"></option>
             </select>
             <label>Summa:</label>
             <input type="text" name="partsum"/>
