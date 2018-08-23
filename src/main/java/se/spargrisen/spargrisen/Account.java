@@ -5,13 +5,13 @@ import java.util.List;
 
 public class Account {
 
-    private String name;
+    private int accountID;
     private double balance;
     public List<Integer> transactions = new ArrayList<>();
 
     public Account(){}
-    public Account(String name, double balance) {
-        this.name = name;
+    public Account(int accountID, double balance) {
+        this.accountID = accountID;
         this.balance = balance;
     }
 
