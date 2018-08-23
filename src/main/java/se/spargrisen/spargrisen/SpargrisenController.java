@@ -1,11 +1,13 @@
 package se.spargrisen.spargrisen;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import se.spargrisen.spargrisen.Repository.JDBCSpargrisenRepository;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +17,9 @@ import java.util.List;
 
 @Controller
 public class SpargrisenController {
+
+    @Autowired
+    private JDBCSpargrisenRepository repository;
 
     @GetMapping("/login")
     public ModelAndView login() {
@@ -58,6 +63,7 @@ public class SpargrisenController {
 
     @PostMapping("/budget")
     public ModelAndView budget(@RequestParam String income) {
+
         return new ModelAndView("budgetmanagment")
                 .addObject("income", income)
                 .addObject("Categories", Categories.values());
@@ -65,6 +71,7 @@ public class SpargrisenController {
 
     @PostMapping("/budget/partofsum")
     public ModelAndView partofsum (@RequestParam String partsum) {
+
         return new ModelAndView("budgetmanagment");
     }
 }
