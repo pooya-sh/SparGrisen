@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
+
 
 @Component
 public class JDBCSpargrisenRepository implements SpargrisenRepository {
@@ -26,6 +28,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 //            throw new BlogRepositoryException(e);
 //        }
 //    }
+
     @Override
     public void deposit(double income, int id) {
         try (Connection conn = dataSource.getConnection();
@@ -39,6 +42,21 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
         }
     }
 
+
+    @Override
+    public Map<Integer, String> getCategories() {
+        try (Connection conn = dataSource.getConnection();
+            Statement statement = conn.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT c.category_ID, c.name " +
+                     " FROM categories c " +
+                     " INNER JOIN "
+                     " WHERE c.category_ID = ") {
+
+             } catch (SQLException e) {
+
+        }
+
+    }
 
 }
 
