@@ -1,8 +1,8 @@
 package se.spargrisen.spargrisen;
 
 public class User {
-    int user_ID;
-    String name;
+    private int user_ID;
+    private String name;
 
     public User(int id, String name) {
         this.user_ID = id;

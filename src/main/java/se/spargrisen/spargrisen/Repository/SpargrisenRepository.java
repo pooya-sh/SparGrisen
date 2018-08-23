@@ -12,5 +12,7 @@ public interface SpargrisenRepository {
     List<Category> getCategories(int userId);
     List<Category> getAllCategories();
     Account getAccount(int userId);
+    List<Transaction> getTransactions(int account_id);
+    List<Budget> getBudgets(int user_id);
 
 }
