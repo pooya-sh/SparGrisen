@@ -182,7 +182,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
                 rs.getDouble("balance")
         );
     }
-
+  
     private Transaction rsTransaction(ResultSet rs) throws SQLException {
         return new Transaction(
                 rs.getInt("transaction_ID"),
