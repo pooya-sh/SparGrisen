@@ -1,11 +1,8 @@
 package se.spargrisen.spargrisen;
 
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,12 +10,6 @@ import se.spargrisen.spargrisen.Repository.JDBCSpargrisenRepository;
 import se.spargrisen.spargrisen.Repository.Transaction;
 import javax.servlet.http.HttpSession;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +65,7 @@ public class SpargrisenController {
 
     @GetMapping("/budget")
     public ModelAndView budget() {
-        return new ModelAndView("budgetmanagment");
+        return new ModelAndView("budget");
     }
 
     @PostMapping("/budget")
@@ -92,7 +83,7 @@ public class SpargrisenController {
         budgettable.put("Nöje", 260);
         budgettable.put("Övrigt", 5400);
 
-        return new ModelAndView("budgetmanagment")
+        return new ModelAndView("budget")
                 .addObject("income", newbalance)
                 .addObject("Categories", repository.getAllCategories())
                 .addObject("budgettable", budgettable);
@@ -101,7 +92,7 @@ public class SpargrisenController {
     @PostMapping("/budget/partofsum")
     public ModelAndView partofsum(@RequestParam String partsum) {
 
-        return new ModelAndView("budgetmanagment");
+        return new ModelAndView("budget");
     }
 
 
