@@ -1,5 +1,6 @@
 package se.spargrisen.spargrisen;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Controller;
@@ -8,12 +9,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import se.spargrisen.spargrisen.Repository.JDBCSpargrisenRepository;
+import se.spargrisen.spargrisen.Repository.Transaction;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SpargrisenController {
@@ -26,7 +32,7 @@ public class SpargrisenController {
         return new ModelAndView("login");
     }
 
-//    @GetMapping("/logout")
+    //    @GetMapping("/logout")
 //    public String logout(HttpSession session, HttpServletResponse res) {
 //        session.invalidate();
 //        Cookie cookie = new Cookie("JSESSIONID", "");
@@ -44,17 +50,23 @@ public class SpargrisenController {
 //        return "login";
 //    }
 //
-//    @GetMapping("/homepage")
-//    public ModelAndView homepage(HttpSession session) {
-////session.setAttribute("user", );
-//        if (session.getAttribute("user") != null) {
-//            return new ModelAndView("homepage");
-//        }
-//        return new ModelAndView("login");
-//    }
-//    public static void main(String[] args) {
-//        SpringApplication.run(SpargrisenController.class, args);
-//    }
+    @GetMapping("/homepage")
+    public ModelAndView homepage() {
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.add(new Transaction(1, 1, 5,
+                LocalDate.of(2018, 8, 21), 500, "", "Mat"));
+        transactions.add(new Transaction(1, 1, 5,
+                LocalDate.of(2018, 8, 21), 550, "","Mat"));
+        transactions.add(new Transaction(1, 1, 5,
+                LocalDate.of(2018, 8, 21), 900, "Tessst","Mat"));
+        transactions.add(new Transaction(1, 1, 5,
+                LocalDate.of(2018, 8, 21), 501, "","Mat"));
+        transactions.add(new Transaction(1, 1, 5,
+                LocalDate.of(2018, 8, 21), 728, "Också test","Mat"));
+
+        return new ModelAndView("homepage")
+                .addObject("transactions", transactions);
+    }
 
     @GetMapping("/budget")
     public ModelAndView budget() {
@@ -70,7 +82,7 @@ public class SpargrisenController {
     }
 
     @PostMapping("/budget/partofsum")
-    public ModelAndView partofsum (@RequestParam String partsum) {
+    public ModelAndView partofsum(@RequestParam String partsum) {
 
         return new ModelAndView("budgetmanagment");
 

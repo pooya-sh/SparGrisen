@@ -2,58 +2,112 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
-          integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+          integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous"/>
     <meta charset="UTF-8"/>
     <title>homepage</title>
 </head>
 <body>
-<h1>Välkommen till Spargrisen</h1>
-<img src="..\src\main\resources\img\piggybank.jpg" height="340" width="519" alt="Spargris"/>
-
-<div>
-    <form action="/" method="post">
-        Kategori: <select>
-            <option value="Boende">Boende</option>
-            <option value="Transport">Transport</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Livsmedel">Livsmedel</option>
-        </select>
-        Summa: <input name="text" type="text"/>
-        <input type="hidden" name="Id" th:value="${blog.id}"/>
-        <input type="hidden" name="postId" th:value="${post.id}"/>
-        <input type="submit" value="Lägg till"/>
-    </form>
-    <h2></h2>
-
-    <table style="width:100%">
-        <tr>
-            <th>Kategorier</th>
-            <th>Summa</th>
-            <th>Spenderat</th>
-            <th>Saldo</th>
-            <th>Statusemoji</th>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
+<div class="container">
+    <header class="row bg-success text-white">
+        <div class="col-4">
+            <img src="..\src\main\resources\img\piggybank.jpg" height="100" width="175" alt="Spargris"/>
+        </div>
+        <div class="col-6">
+            <h1>Välkommen till Spargrisen</h1>
+        </div>
+        <div class="col-2">
+            <p>Hej User!</p>
+        </div>
+    </header>
+    <section>
+        <div class="row">
+            <div id="right-column" class="col-sm">
+                <form>
+                    <h2>Sammanfattning</h2>
+                    <div class="form-group row">
+                        <div class="col-sm">
+                            <label>ÅR</label>
+                            <input type="number" min="2018" max="2050" class="form-control"/>
+                        </div>
+                        <div class="col-sm">
+                            <label>MÅNAD</label>
+                            <select class="form-control">
+                                <option>Januari</option>
+                                <option>Februari</option>
+                                <option>Mars</option>
+                                <option>April</option>
+                                <option>Maj</option>
+                                <option>Juni</option>
+                                <option>Juli</option>
+                                <option>Augusti</option>
+                                <option>September</option>
+                                <option>Oktober</option>
+                                <option>November</option>
+                                <option>December</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Budgeterad</label>
+                        <label>5000 SEK</label>
+                    </div>
+                    <div class="form-group">
+                        <label>Balans</label>
+                        <label>300 SEK</label>
+                    </div>
+                </form>
+            </div>
+            <div id="left-column" class="col-sm-8">
+                <div style="height:75%; overflow-y: scroll; overflow-x: visible;">
+                    <table class="table">
+                        <thead>
+                        <th scope="col">Datum</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Summa</th>
+                        <th scope="col">Anteckningar</th>
+                        </thead>
+                        <tbody>
+                        <tr th:each="Transaction : ${transactions}">
+                            <td th:text="${Transaction.getTransaction_date()}"></td>
+                            <td th:text="${Transaction.getCategory_description()}"></td>
+                            <td th:text="${Transaction.getAmmount()}"></td>
+                            <td th:text="${Transaction.getDescription()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <form action="/" method="post">
+                    <input type="hidden" name="account_ID"/>
+                    <table class="table">
+                        <thead>
+                            <th scope="col">
+                                <input type="date"/>
+                            </th>
+                            <th scope="col">
+                                <select>
+                                    <option value="Boende">Boende</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Livsmedel">Livsmedel</option>
+                                </select>
+                            </th>
+                            <th scope="col">
+                                <input name="ammount" type="number"/>
+                            </th>
+                            <th scope="col">
+                                <input name="description"/>
+                            </th>
+                        </thead>
+                        <tr>
+                            <td>
+                                <input type="submit" value="Lägg till"/>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </section>
 </div>
 </body>
 </html>

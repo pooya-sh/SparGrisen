@@ -43,21 +43,21 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     }
 
 
-    @Override
-    public Map<Integer, String> getCategories() {
-        try (Connection conn = dataSource.getConnection();
-            Statement statement = conn.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT c.category_ID, c.name " +
-                     " FROM categories c " +
-                     " INNER JOIN users_categories AS uc " +
-                     " ON c.category_ID = uc.category_ID" +
-                     " WHERE uc.user_ID = ?");
-
-             } catch (SQLException e) {
-
-        }
-
-    }
+//    @Override
+//    public Map<Integer, String> getCategories() {
+//        try (Connection conn = dataSource.getConnection();
+//            Statement statement = conn.createStatement();
+//             ResultSet rs = statement.executeQuery("SELECT c.category_ID, c.name " +
+//                     " FROM categories c " +
+//                     " INNER JOIN users_categories AS uc " +
+//                     " ON c.category_ID = uc.category_ID" +
+//                     " WHERE uc.user_ID = ?");
+//
+//             } catch (SQLException e) {
+//
+//        }
+//
+//    }
 
 }
 
