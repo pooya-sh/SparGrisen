@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import se.spargrisen.spargrisen.Repository.JDBCSpargrisenRepository;
 import se.spargrisen.spargrisen.Repository.Transaction;
-
+import javax.servlet.http.HttpSession;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -42,14 +42,13 @@ public class SpargrisenController {
 //        return "login";
 //    }
 //
-//    @PostMapping("/login")
-//    public String submit(HttpSession session, @RequestParam String username, @RequestParam String password) {
-//        if (username.equalsIgnoreCase("") && password.equalsIgnoreCase("") ) {
-//            session.setAttribute("user", username);
-//            return "homepage";
-//        }
-//        return "login";
-//    }
+    @PostMapping("/login")
+    public ModelAndView submit(HttpSession session, @RequestParam String inUsername, @RequestParam String inPassword) {
+        User user = repository.checkUsernamePassword(inUsername, inPassword);
+        System.out.println(user.name);
+        return new ModelAndView("homepage")
+                .addObject("name", user.name);
+    }
 //
     @GetMapping("/homepage")
     public ModelAndView homepage() {

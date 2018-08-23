@@ -121,13 +121,14 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 
     }
 
-    public User checkUsernamePassword() {
+    public User checkUsernamePassword(String username, String password) {
         try {
             Connection conn = dataSource.getConnection();
             Statement statement = conn.createStatement();
             PreparedStatement ps = conn.prepareStatement("Select u.user_ID, u.name" +
                     " FROM users AS u WHERE u.username = ? AND u.password = ?;");
-            //Parametrar
+            ps.setString(1, username);
+            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 return rsUser(rs);
@@ -141,7 +142,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 
     private User rsUser(ResultSet rs) throws SQLException {
         return new User(
-                rs.getInt("user_ID"),
+                rs.getInt("User_ID"),
                 rs.getString("username")
         );
     }
