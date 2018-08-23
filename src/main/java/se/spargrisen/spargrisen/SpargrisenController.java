@@ -2,8 +2,10 @@ package se.spargrisen.spargrisen;
 
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,8 +31,15 @@ public class SpargrisenController {
 
     @GetMapping("/login")
     public ModelAndView login() {
-        System.out.println(repository.getAccount(1).getBalance());
         return new ModelAndView("login");
+    }
+
+    @GetMapping("/test")
+    public ModelAndView test(){
+        List<Transaction> transactions = repository.getTransactions(1);
+        System.out.println(transactions.size());
+        return new ModelAndView("test")
+                .addObject("transactions", transactions);
     }
 
     //    @GetMapping("/logout")
@@ -45,25 +54,21 @@ public class SpargrisenController {
     @PostMapping("/login")
     public ModelAndView submit(HttpSession session, @RequestParam String inUsername, @RequestParam String inPassword) {
         User user = repository.checkUsernamePassword(inUsername, inPassword);
-        return new ModelAndView("homepage")
-                .addObject("user", user);
+        if(user != null){
+            session.setAttribute("user_ID", user.getUser_ID());
+            session.setAttribute("user_name", user.getName());
+            return new ModelAndView("redirect:homepage");
+        }
+        return new ModelAndView("login");
     }
-//
-    @GetMapping("/homepage")
-    public ModelAndView homepage() {
-        List<Transaction> transactions = new ArrayList<>();
-        transactions.add(new Transaction(1, 1, 5,
-                LocalDate.of(2018, 8, 21), 500, "", "Mat"));
-        transactions.add(new Transaction(1, 1, 5,
-                LocalDate.of(2018, 8, 21), 550, "","Mat"));
-        transactions.add(new Transaction(1, 1, 5,
-                LocalDate.of(2018, 8, 21), 900, "Tessst","Mat"));
-        transactions.add(new Transaction(1, 1, 5,
-                LocalDate.of(2018, 8, 21), 501, "","Mat"));
-        transactions.add(new Transaction(1, 1, 5,
-                LocalDate.of(2018, 8, 21), 728, "Också test","Mat"));
 
+    @GetMapping("/homepage")
+    public ModelAndView homepage(HttpSession session) {
+        Account account = repository.getAccount((int)session.getAttribute("user_ID"));
+        List<Transaction> transactions = repository.getTransactions(account.getAccountID());
         return new ModelAndView("homepage")
+                .addObject("user_ID",session.getAttribute("user_ID"))
+                .addObject("user_name",session.getAttribute("user_name"))
                 .addObject("transactions", transactions);
     }
 

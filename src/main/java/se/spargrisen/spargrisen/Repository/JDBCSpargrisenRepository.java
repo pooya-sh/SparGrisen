@@ -34,6 +34,36 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 //            throw new BlogRepositoryException(e);
 //        }
 //    }
+    @Override
+    public List<Transaction> getTransactions(int account_ID) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT t.transaction_ID, t.account_ID, t.category_ID, " +
+                             "t.transaction_date, t.ammount, t.description, c.name " +
+                             "FROM transactions AS t " +
+                             "INNER JOIN categories AS c ON t.category_ID = c.category_ID " +
+                             "WHERE t.account_ID = ?")) {
+            ps.setInt(1, account_ID);
+            ResultSet rs = ps.executeQuery();
+            List<Transaction> transactions = new ArrayList<>();
+            while (rs.next()) {
+                transactions.add(rsTransaction(rs));
+            }
+            if (transactions.size() > 0) {
+                return transactions;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+    }
+
+    @Override
+    public List<Budget> getBudgets(int user_ID) {
+        return null;
+    }
+
 
     @Override
     public double deposit(double income, int id) {
@@ -45,8 +75,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getDouble("newbalance");
-            }
-            else {
+            } else {
                 throw new Exception("Didn't find balance.");
             }
 
@@ -97,14 +126,14 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     }
 
     @Override
-    public Account getAccount(int userId) {
+    public Account getAccount(int user_ID) {
         try (Connection conn = dataSource.getConnection();
              Statement statement = conn.createStatement();
              PreparedStatement ps = conn.prepareStatement("SELECT a.account_ID, a.balance FROM accounts a WHERE a.user_ID = ?")) {
-            ps.setInt(1, userId);
+            ps.setInt(1, user_ID);
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) throw new SpargrisenRepositoryExeption("No account that matches ID: " + userId);
-                return rsAccount(rs);
+            if (!rs.next()) throw new SpargrisenRepositoryExeption("No account that matches the User ID");
+            return rsAccount(rs);
 
         } catch (SQLException e) {
             throw new SpargrisenRepositoryExeption(e);
@@ -130,7 +159,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return rsUser(rs);
             } else {
                 return null;
@@ -146,14 +175,25 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
                 rs.getString("name")
         );
     }
+
     private Account rsAccount(ResultSet rs) throws SQLException {
         return new Account(
                 rs.getInt("account_ID"),
                 rs.getDouble("balance")
         );
-
     }
 
+    private Transaction rsTransaction(ResultSet rs) throws SQLException {
+        return new Transaction(
+                rs.getInt("transaction_ID"),
+                rs.getInt("account_ID"),
+                rs.getInt("category_ID"),
+                rs.getDate("transaction_date").toLocalDate(),
+                rs.getDouble("ammount"),
+                rs.getString("description"),
+                rs.getString("name")
+        );
+    }
 }
 
 

@@ -15,18 +15,11 @@ public class Account {
         this.balance = balance;
     }
 
-    public void withdraw(double amount) {
-
-        if (balance >= amount)
-            balance -= amount;
-        else
-            System.out.println("Balance is too low.");
-    }
-
-
-
     public double getBalance() {
         return balance;
     }
 
+    public int getAccountID() {
+        return accountID;
+    }
 }
