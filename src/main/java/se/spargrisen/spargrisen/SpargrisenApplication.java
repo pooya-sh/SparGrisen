@@ -2,10 +2,7 @@ package se.spargrisen.spargrisen;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import se.spargrisen.spargrisen.Repository.JDBCSpargrisenRepository;
-import se.spargrisen.spargrisen.Repository.SpargrisenRepository;
-
-import java.util.List;
+import se.spargrisen.spargrisen.repository.JDBCSpargrisenRepository;
 
 @SpringBootApplication
 public class SpargrisenApplication {

@@ -1,9 +1,8 @@
-package se.spargrisen.spargrisen.Repository;
+package se.spargrisen.spargrisen.repository;
 
-import se.spargrisen.spargrisen.Account;
-import se.spargrisen.spargrisen.Category;
-import se.spargrisen.spargrisen.User;
+import se.spargrisen.spargrisen.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -17,5 +16,7 @@ public interface SpargrisenRepository {
     List<Budget> getBudgets(int user_id);
     User registerNewUser(String username, String password, String name);
     void registerNewAccount(int user_ID);
-
+    boolean registerNewBudget(int user_ID, Budget budget);
+    boolean updateBudget(int user_ID, Budget budget);
+    Budget budgetExist(LocalDate budget_date, int user_ID, int category_ID);
 }
