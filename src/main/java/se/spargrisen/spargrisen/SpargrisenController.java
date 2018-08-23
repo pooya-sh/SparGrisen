@@ -73,6 +73,5 @@ public class SpargrisenController {
     public ModelAndView partofsum (@RequestParam String partsum) {
 
         return new ModelAndView("budgetmanagment");
-
     }
 }
