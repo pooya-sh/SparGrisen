@@ -8,4 +8,12 @@ public class User {
         this.user_ID = id;
         this.name = name;
     }
+
+    public int getUser_ID() {
+        return user_ID;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

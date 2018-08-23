@@ -45,9 +45,8 @@ public class SpargrisenController {
     @PostMapping("/login")
     public ModelAndView submit(HttpSession session, @RequestParam String inUsername, @RequestParam String inPassword) {
         User user = repository.checkUsernamePassword(inUsername, inPassword);
-        System.out.println(user.name);
         return new ModelAndView("homepage")
-                .addObject("name", user.name);
+                .addObject("user", user);
     }
 //
     @GetMapping("/homepage")

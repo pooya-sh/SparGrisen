@@ -143,7 +143,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     private User rsUser(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("User_ID"),
-                rs.getString("username")
+                rs.getString("name")
         );
     }
     private Account rsAccount(ResultSet rs) throws SQLException {
