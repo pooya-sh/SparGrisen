@@ -79,4 +79,6 @@ public class SpargrisenController {
 
         return new ModelAndView("budgetmanagment");
     }
+
+
 }
