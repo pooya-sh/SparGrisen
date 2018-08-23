@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Registrering</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
+          integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous"/>
+</head>
+<body>
+
+<div class="container">
+    <header class="row bg-success text-white">
+        <div class="col-4">
+            <img src="..\src\main\resources\img\piggybank.jpg" height="100" width="175" alt="Spargris"/>
+        </div>
+        <div class="col-6">
+            <h1>Ange dina uppgifter</h1>
+        </div>
+    </header>
+
+<div class="col-sm-6">
+    <form action="/register" method="post">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Förnamn</th>
+                <th scope="col">Användarnamn</th>
+                <th scope="col">Lösenord</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row"><input type="text" name="name"/></th>
+                <th scope="row"><input type="text" name="username"/></th>
+                <th scope="row"><input type="password" name="password"/></th>
+                <td> </td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="submit" value="Registrera"/>
+    </form>
+</div>
+</div>
+
+</body>
+</html>
