@@ -25,6 +25,11 @@ public class SpargrisenController {
         return new ModelAndView("login");
     }
 
+    @GetMapping("/register")
+    public ModelAndView register() {
+        return new ModelAndView("register");
+    }
+
     @GetMapping("/test")
     public ModelAndView test(){
         List<Transaction> transactions = repository.getTransactions(1);
@@ -93,6 +98,18 @@ public class SpargrisenController {
     public ModelAndView partofsum(@RequestParam String partsum) {
 
         return new ModelAndView("budget");
+    }
+
+    @PostMapping("/register")
+    public ModelAndView register(HttpSession session, @RequestParam String username, @RequestParam String password, @RequestParam String name) {
+        User user = repository.registerNewUser(username, password, name);
+        if(user != null) {
+            repository.registerNewAccount(user.getUser_ID());
+            session.setAttribute("user_ID", user.getUser_ID());
+            session.setAttribute("user_name", user.getName());
+            return new ModelAndView("redirect:homepage");
+        }
+        return new ModelAndView("login");
     }
 
 

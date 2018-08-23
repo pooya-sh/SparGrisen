@@ -22,18 +22,6 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     private DataSource dataSource;
 
 
-    //    @Override
-//    public List<??> ??() {
-//        try (Connection conn = ???.getConnection();
-//             Statement stmt = conn.createStatement();
-//             ResultSet rs = stmt.executeQuery("SELECT id, title FROM blogs")) {
-//            List<Blog> blogs = new ArrayList<>();
-//            while (rs.next()) blogs.add(rsBlog(rs));
-//            return blogs;
-//        } catch (SQLException e) {
-//            throw new BlogRepositoryException(e);
-//        }
-//    }
     @Override
     public List<Transaction> getTransactions(int account_ID) {
         try (Connection conn = dataSource.getConnection();
@@ -68,7 +56,6 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     @Override
     public double deposit(double income, int id) {
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
              PreparedStatement ps = conn.prepareStatement("SELECT balance + ? as newbalance FROM accounts where account_id = ?")) {
             ps.setDouble(1, income);
             ps.setInt(2, id);
@@ -89,7 +76,6 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     @Override
     public List<Category> getCategories(int userId) {
         try (Connection conn = dataSource.getConnection();
-             Statement statement = conn.createStatement();
              PreparedStatement ps = conn.prepareStatement("SELECT c.category_ID, c.name " +
                      " FROM categories c " +
                      " INNER JOIN users_categories AS uc " +
@@ -110,7 +96,6 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     @Override
     public List<Category> getAllCategories() {
         try (Connection conn = dataSource.getConnection();
-             Statement statement = conn.createStatement();
              PreparedStatement ps = conn.prepareStatement("SELECT c.category_ID, c.name " +
                      " FROM categories c "
              )) {
@@ -128,7 +113,6 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     @Override
     public Account getAccount(int user_ID) {
         try (Connection conn = dataSource.getConnection();
-             Statement statement = conn.createStatement();
              PreparedStatement ps = conn.prepareStatement("SELECT a.account_ID, a.balance FROM accounts a WHERE a.user_ID = ?")) {
             ps.setInt(1, user_ID);
             ResultSet rs = ps.executeQuery();
@@ -153,7 +137,6 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     public User checkUsernamePassword(String username, String password) {
         try {
             Connection conn = dataSource.getConnection();
-            Statement statement = conn.createStatement();
             PreparedStatement ps = conn.prepareStatement("Select u.user_ID, u.name" +
                     " FROM users AS u WHERE u.username = ? AND u.password = ?;");
             ps.setString(1, username);
@@ -169,6 +152,47 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
         }
     }
 
+    @Override
+    public User registerNewUser(String username, String password, String name) {
+        System.out.println("hej");
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO users (users.name, users.username, users.password)" +
+                     " VALUES (?,?,?)")) {
+            ps.setString(1, name);
+            ps.setString(2, username);
+            ps.setString(3, password);
+            int rs = ps.executeUpdate();
+            if (rs <= 0) {
+                throw new SpargrisenRepositoryExeption("Could not create user");
+            } else {
+                User user = checkUsernamePassword(username, password);
+                return user;
+            }
+
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+
+    }
+
+    @Override
+    public void registerNewAccount(int user_ID) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO accounts (accounts.user_ID, accounts.balance)" +
+                     " VALUES (?,?)")) {
+            ps.setInt(1, user_ID);
+            ps.setDouble(2, 0);
+            int rs = ps.executeUpdate();
+            if (rs <= 0) {
+                throw new SpargrisenRepositoryExeption("Could not create account");
+            }
+
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+
+    }
+
     private User rsUser(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("User_ID"),
@@ -182,7 +206,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
                 rs.getDouble("balance")
         );
     }
-  
+
     private Transaction rsTransaction(ResultSet rs) throws SQLException {
         return new Transaction(
                 rs.getInt("transaction_ID"),
