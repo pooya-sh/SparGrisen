@@ -20,6 +20,7 @@ public class SpargrisenController {
 
     @GetMapping("/login")
     public ModelAndView login() {
+        System.out.println(repository.getAccount(1).getBalance());
         return new ModelAndView("login");
     }
 
@@ -60,6 +61,11 @@ public class SpargrisenController {
 
     @PostMapping("/budget")
     public ModelAndView budget(@RequestParam String income) {
+
+        double income2 = Double.parseDouble(income);
+        Account account = repository.getAccount(1);
+        double newbalance = account.getBalance() + income2;
+
         Map<String, Integer> budgettable = new HashMap<>();
         budgettable.put("Boende", 5000);
         budgettable.put("Livsmedel", 2000);
@@ -69,7 +75,7 @@ public class SpargrisenController {
         budgettable.put("Övrigt", 5400);
 
         return new ModelAndView("budgetmanagment")
-                .addObject("income", income)
+                .addObject("income", newbalance)
                 .addObject("Categories", repository.getAllCategories())
                 .addObject("budgettable", budgettable);
     }
