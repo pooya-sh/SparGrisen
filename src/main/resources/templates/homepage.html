@@ -98,7 +98,9 @@
                             <td th:text="${Transaction.getAmmount()}"></td>
                             <td th:text="${Transaction.getDescription()}"></td>
                             <td>
-                                <button th:value="${Transaction.getTransaction_ID()}" class="btn btn-danger">X</button>
+                                <form action="/homepage/deleteTransaction" method="post">
+                                    <button type="submit" name="deleteButton" th:value="${Transaction.getTransaction_ID()}" class="btn btn-danger">X</button>
+                                </form>
                             </td>
                         </tr>
                         </tbody>
