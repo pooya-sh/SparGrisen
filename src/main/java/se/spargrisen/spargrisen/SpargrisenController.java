@@ -75,6 +75,7 @@ public class SpargrisenController {
         LocalDate chosenBudgetDate = LocalDate.parse(session.getAttribute("chosenBudgetDate").toString(), formatter);
         System.out.println(chosenBudgetDate);
         List<Budget> budgets = repository.getBudgets((int) session.getAttribute("user_ID"), chosenBudgetDate);
+        List<Category> categories = repository.getCategories((int) session.getAttribute("user_ID"));
         List<Transaction> transactions = repository.getTransactions(account.getAccountID());
         return new ModelAndView("homepage")
                 .addObject("user_ID", session.getAttribute("user_ID"))
@@ -83,6 +84,7 @@ public class SpargrisenController {
                 .addObject("chosenBudgetDate", chosenBudgetDate)
                 .addObject("account", account)
                 .addObject("budgets", budgets)
+                .addObject("categories", categories)
                 .addObject("transactions", transactions);
     }
 
