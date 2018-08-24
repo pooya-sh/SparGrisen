@@ -132,6 +132,13 @@ public class SpargrisenController {
         return new ModelAndView("redirect:/budget");
     }
 
+    @PostMapping("/transaction")
+    public ModelAndView transaction(@RequestParam int account, @RequestParam double ammount, @RequestParam LocalDate date, @RequestParam String description) {
+        Transaction transaction = new Transaction(0, account, 1, date, ammount, description, "" );
+        repository.registerNewTransaction(transaction);
+        return new ModelAndView("redirect:homepage");
+    }
+
     @PostMapping("/budget/chooseBudgetDate")
     public ModelAndView updateBudgetListBudgetPage(HttpSession session, @RequestParam String budgetYear, @RequestParam String budgetMonth) {
         LocalDate chosenDate = parseChosenBudgetDate(budgetYear, budgetMonth);
@@ -154,7 +161,13 @@ public class SpargrisenController {
         return new ModelAndView("login");
     }
 
-    private LocalDate parseChosenBudgetDate(String budgetYear, String budgetMonth) {
+    @PostMapping("/homepage/deleteTransaction")
+    public ModelAndView deleteTransaction(@RequestParam int deleteButton) {
+        repository.deleteTransaction(deleteButton);
+        return new ModelAndView("redirect:/homepage");
+    }
+  
+      private LocalDate parseChosenBudgetDate(String budgetYear, String budgetMonth) {
         int year = Integer.parseInt(budgetYear);
         int month = Integer.parseInt(budgetMonth);
         return LocalDate.of(year, month, 01);

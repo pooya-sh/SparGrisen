@@ -11,21 +11,21 @@
     <header>
         <div class="row bg-success text-white d-flex align-items-end">
             <div class="col-2">
-                <img src="..\src\main\resources\img\piggybank.jpg" height="100" width="175" alt="Spargris"/>
+                <img src="../static/img/piggybank.jpg" th:src="'/img/piggybank.jpg'"
+                     height="100" width="175" alt="Spargris"/>
             </div>
             <div class="col-8">
-                <h1>Välkommen till Spargrisen</h1>
+                <h1>Spargrisen</h1>
+                <h3>Håller koll på din budget</h3>
             </div>
             <div class="col-2">
-                <p th:text="'Hej ' + ${user_name} + '!'"></p>
+                <h3 th:text="'Välkommen ' + ${user_name} + '!'"></h3>
             </div>
         </div>
         <div class="row">
             <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex flex-row-reverse col-12">
-                <button class="p-2 btn btn-light" type="button" onClick="location.href='/logout.html'">Logga ut</button>
-                <button class="p-2 btn btn-light" type="button" onClick="location.href='/budget.html'">Skapa din
-                    budget
-                </button>
+                <button class="p-2 btn btn-light" type="button" onClick="location.href='/login'">Logga ut</button>
+                <button class="p-2 btn btn-light" type="button" onClick="location.href='/budget'">Skapa budget</button>
             </nav>
         </div>
     </header>
@@ -33,8 +33,8 @@
         <div class="row mt-2">
             <div id="right-column" class="col-sm-4">
                 <h2>Budget</h2>
-                <div style="height:100%; overflow-y: scroll; overflow-x: visible;">
-                    <table class="table">
+                <div style="height: 400px; overflow-y: scroll; overflow-x: visible;">
+                <table class="table">
                         <thead>
                         <th scope="col">Kategori</th>
                         <th scope="col">Summa</th>
@@ -80,7 +80,9 @@
             </div>
             <div id="left-column" class="col-sm-8">
                 <h2>Transaktioner</h2>
-                <div style="height:100%; overflow-y: scroll; overflow-x: visible;">
+
+                <div style="height:400px; overflow-y: scroll; overflow-x: visible;">
+
                     <table class="table">
                         <thead>
                         <th scope="col">Datum</th>
@@ -96,18 +98,20 @@
                             <td th:text="${Transaction.getAmmount()}"></td>
                             <td th:text="${Transaction.getDescription()}"></td>
                             <td>
-                                <button th:value="${Transaction.getTransaction_ID()}" class="btn btn-danger">X</button>
+                                <form action="/homepage/deleteTransaction" method="post">
+                                    <button type="submit" name="deleteButton" th:value="${Transaction.getTransaction_ID()}" class="btn btn-danger">X</button>
+                                </form>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <form action="/" method="post">
-                    <input type="hidden" name="${account.getAccountID}"/>
+                <form action="/transaction" method="post">
+                    <input type="hidden" name="account" th:value="${account.accountID}"/>
                     <table class="table">
                         <thead>
                         <th scope="col">
-                            <input type="date"/>
+                            <input name="date" type="date"/>
                         </th>
                         <th scope="col">
                             <select>

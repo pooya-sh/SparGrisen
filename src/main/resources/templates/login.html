@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
           integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous"/>
@@ -8,19 +8,19 @@
 </head>
 <body>
 <div class="container">
-    <div class="col-sm-6">
+    <div class="col-sm-8">
         <div class="box"><p></p></div>
-        <div class="jumbotron" >
-            <img src="..\src\main\resources\img\piggybank.jpg" height="170" width="259" alt="Spargris"/>
+        <div class="jumbotron bg-success">
+            <img src="../static/img/piggybank.jpg" th:src="'/img/piggybank.jpg'" height="200" width="350" alt="Spargris"/>
             <h1>SPARGRISEN</h1>
-            <h2>Loging</h2>
+            <h2>- jag håller koll på din budget!</h2>
         </div>
         <form action="#" method="post">
             <div class="form-group">
                 <label>Användarnamn:</label>
-                <input type="text" name="inUsername"/>
+                <input type="text" name="inUsername"/><br>
                 <label>Lösenord:</label>
-                <input type="password" name="inPassword"/>
+                <input type="password" name="inPassword"/><br>
                 <input type="submit" name="btnLogin"/>
             </div>
         </form>

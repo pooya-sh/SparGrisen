@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import se.spargrisen.spargrisen.*;
 
 import javax.sql.DataSource;
+import javax.swing.text.TabableView;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     @Override
     public double deposit(double income, int id) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT balance + ? as newbalance FROM accounts where account_id = ?")) {
+             PreparedStatement ps = conn.prepareStatement("SELECT balance + ? AS newbalance FROM accounts where account_id = ?")) {
             ps.setDouble(1, income);
             ps.setInt(2, id);
             ResultSet rs = ps.executeQuery();
@@ -247,6 +248,28 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     }
 
     @Override
+    public Transaction registerNewTransaction(Transaction transaction) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO transactions (transactions.ammount, " +
+                     " transactions.transaction_date, transactions.category_ID, transactions.description, account_ID)" +
+                     " VALUES (?,?,?,?,?)")) {
+            ps.setDouble(1, transaction.getAmmount() );
+            ps.setDate(2, Date.valueOf(transaction.getTransaction_date()));
+            ps.setInt(3, transaction.getCategory_ID());
+            ps.setString(4, transaction.getDescription());
+            ps.setInt(5, transaction.getAccount_ID());
+            int rs = ps.executeUpdate();
+            if (rs <= 0) {
+                throw new SpargrisenRepositoryExeption("Could not create transaction entry");
+            } else {
+                return transaction;
+            }
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+    }
+
+    @Override
     public boolean updateBudget(int user_ID, Budget budget) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement("UPDATE budgets " +
@@ -288,6 +311,20 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
         }
     }
 
+    @Override
+    public boolean deleteTransaction(int transaction_ID) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM transactions WHERE transaction_ID =?")) {
+            ps.setInt(1, transaction_ID);
+            int rs = ps.executeUpdate();
+            if (rs < 1)
+                throw new SpargrisenRepositoryExeption("Could not delete");
+            else return true;
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+    }
+
     private User rsUser(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("User_ID"),
@@ -316,11 +353,11 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 
     private Budget rsBudget(ResultSet rs) throws SQLException {
         return new Budget(
-            rs.getInt("budget_ID"),
-            rs.getInt("category_ID"),
-            rs.getDouble("ammount"),
-            rs.getDate("budget_date").toLocalDate(),
-            rs.getString("name")
+                rs.getInt("budget_ID"),
+                rs.getInt("category_ID"),
+                rs.getDouble("ammount"),
+                rs.getDate("budget_date").toLocalDate(),
+                rs.getString("name")
         );
     }
 }
