@@ -106,12 +106,12 @@
                         </tbody>
                     </table>
                 </div>
-                <form action="/" method="post">
-                    <input type="hidden" name="${account.getAccountID}"/>
+                <form action="/transaction" method="post">
+                    <input type="hidden" name="account" th:value="${account.accountID}"/>
                     <table class="table">
                         <thead>
                         <th scope="col">
-                            <input type="date"/>
+                            <input name="date" type="date"/>
                         </th>
                         <th scope="col">
                             <select>

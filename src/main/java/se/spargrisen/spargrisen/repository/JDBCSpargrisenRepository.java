@@ -230,6 +230,28 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     }
 
     @Override
+    public Transaction registerNewTransaction(Transaction transaction) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO transactions (transactions.ammount, " +
+                     " transactions.transaction_date, transactions.category_ID, transactions.description, account_ID)" +
+                     " VALUES (?,?,?,?,?)")) {
+            ps.setDouble(1, transaction.getAmmount() );
+            ps.setDate(2, Date.valueOf(transaction.getTransaction_date()));
+            ps.setInt(3, transaction.getCategory_ID());
+            ps.setString(4, transaction.getDescription());
+            ps.setInt(5, transaction.getAccount_ID());
+            int rs = ps.executeUpdate();
+            if (rs <= 0) {
+                throw new SpargrisenRepositoryExeption("Could not create transaction entry");
+            } else {
+                return transaction;
+            }
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+    }
+
+    @Override
     public boolean updateBudget(int user_ID, Budget budget) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement("UPDATE budgets " +
