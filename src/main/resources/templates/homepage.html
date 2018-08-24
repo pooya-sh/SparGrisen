@@ -11,7 +11,8 @@
     <header>
         <div class="row bg-success text-white d-flex align-items-end">
             <div class="col-2">
-                <img src="..\src\main\resources\img\piggybank.jpg" height="100" width="175" alt="Spargris"/>
+                <img src="../static/img/piggybank.jpg" th:src="'/img/piggybank.jpg'"
+                     height="100" width="175" alt="Spargris"/>
             </div>
             <div class="col-8">
                 <h1>Välkommen till Spargrisen</h1>
@@ -33,7 +34,7 @@
         <div class="row mt-2">
             <div id="right-column" class="col-sm-4">
                 <h2>Budget</h2>
-                <div style="height:100%; overflow-y: scroll; overflow-x: visible;">
+                <div style="height: 400px; overflow-y: scroll; overflow-x: visible;">
                     <table class="table">
                         <thead>
                         <th scope="col">Kategori</th>
@@ -80,7 +81,7 @@
             </div>
             <div id="left-column" class="col-sm-8">
                 <h2>Transaktioner</h2>
-                <div style="height:100%; overflow-y: scroll; overflow-x: visible;">
+                <div style="height:400px; overflow-y: scroll; overflow-x: visible;">
                     <table class="table">
                         <thead>
                         <th scope="col">Datum</th>
