@@ -7,26 +7,61 @@
           integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous"/>
 </head>
 <body>
-<img src="..\src\main\resources\img\piggybank.jpg" height="170" width="259" alt="Spargris"/>
-<button type="button" onClick="location.href='/homepage.html'">Tillbaka till startsidan</button>
-<button type="button" onClick="location.href='/login.html'">Logga ut</button>
-<h1>Skapa din budget</h1>
-<div th:if="${income == null}">
-    <h3>Fyll i din inkomst</h3>
-    <form action="/budget" method="post">
-        <div class="form-group">
-            <label>Summa:</label>
-            <input type="text" name="income"/>
-            <input type="submit" value="Lägg till"/>
+<div class="container">
+    <img src="..\src\main\resources\img\piggybank.jpg" height="170" width="259" alt="Spargris"/>
+    <button type="button" onClick="location.href='/homepage.html'">Tillbaka till startsidan</button>
+    <button type="button" onClick="location.href='/login.html'">Logga ut</button>
+    <h1>Skapa din budget</h1>
+
+    <h4 th:if="${account != null} " th:text="'Du har: ' + ${account.getBalance()} + ' kr'"></h4>
+
+    <h3>Dela upp din inkomst i budgetkategorier</h3>
+    <form action="/budget/chooseBudgetDate" method="post">
+        <div class="form-group row">
+            <div class="col-sm">
+                <label>ÅR</label>
+                <input name="budgetYear" type="number" min="2018" max="2050" th:value="${chosenBudgetDate.getYear()}"
+                       class="form-control"/>
+            </div>
+            <div class="col-sm">
+                <label>MÅNAD</label>
+                <select name="budgetMonth" class="form-control">
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('JANUARY')}" value="01">Januari
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('FEBRUARY')}" value="02">
+                        Februari
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('MARCH')}" value="03">Mars
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('APRIL')}" value="04">April
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('MAY')}" value="05">Maj
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('JUNE')}" value="06">Juni
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('JULY')}" value="07">Juli
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('AUGUST')}" value="08">Augusti
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('SEPTEMBER')}" value="09">
+                        September
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('OCTOBER')}" value="10">Oktober
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('NOVEMBER')}" value="11">
+                        November
+                    </option>
+                    <option th:selected="${chosenBudgetDate.getMonth().toString().equals('DECEMBER')}" value="12">
+                        December
+                    </option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <button type="submit">Välj</button>
+            </div>
         </div>
     </form>
-</div>
-
-<h4 th:if="${income != null} " th:text="'Du har: ' + ${income} + ' kr'"></h4>
-
-<div th:if="${income != null}">
-    <h3>Dela upp din inkomst i budgetkategorier</h3>
-    <form action="/budget" method="post">
+    <form action="/budget/update" method="post">
         <table class="table">
             <thead>
             <tr>
@@ -35,17 +70,16 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="Entry : ${budgettable}">
-                <th scope="row"><label th:text="${Entry.key}"></label></th>
-                <td> <input type="text" name="partsum" th:value="${Entry.value}"/></td>
+            <tr th:each="Budget : ${budgets}">
+                <th scope="row">
+                        <label th:text="${Budget.getCategory_description()}"></label>
+                </th>
+                <td><input type="text" th:name="${Budget.getCategory_ID()}" th:value="${Budget.getAmmount()}"/></td>
             </tr>
             </tbody>
         </table>
         <input type="submit" value="Lägg till alla"/>
     </form>
 </div>
-
-<h4 th:if="${partsum != null} " th:text="'Du har: ' + ${partsum} + ' kr'"></h4>
-
 </body>
 </html>

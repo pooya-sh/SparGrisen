@@ -45,12 +45,12 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 
     @Override
     public List<Budget> getBudgets(int user_ID, LocalDate budget_date) {
+        String sql = "SELECT b.budget_ID, b.category_ID, b.ammount, b.budget_date, c.name " +
+                "FROM budgets AS b " +
+                "INNER JOIN categories AS c ON b.category_ID = c.category_ID " +
+                "WHERE b.user_ID = ? AND b.budget_date = ?";
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(
-                     "SELECT b.budget_ID, b.category_ID, b.ammount, b.budget_date, c.name " +
-                             "FROM budgets AS b " +
-                             "INNER JOIN categories AS c ON b.category_ID = c.category_ID " +
-                             "WHERE b.user_ID = ? AND b.budget_date = ?")) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, user_ID);
             ps.setDate(2, Date.valueOf(budget_date));
             ResultSet rs = ps.executeQuery();
@@ -202,6 +202,24 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
                 throw new SpargrisenRepositoryExeption("Could not create account");
             }
 
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+    }
+
+    @Override
+    public boolean registerStandardCategory(int user_ID, int category_ID){
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO users_categories (category_ID ,user_ID) " +
+                     "VALUES (?,?)")) {
+            ps.setInt(1, category_ID);
+            ps.setInt(2, user_ID);
+            int rs = ps.executeUpdate();
+            if (rs <= 0) {
+                throw new SpargrisenRepositoryExeption("Could not create standard category entry");
+            } else {
+                return true;
+            }
         } catch (SQLException e) {
             throw new SpargrisenRepositoryExeption(e);
         }
