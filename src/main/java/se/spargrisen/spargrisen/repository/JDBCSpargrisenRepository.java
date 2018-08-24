@@ -72,7 +72,7 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     @Override
     public double deposit(double income, int id) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT balance + ? as newbalance FROM accounts where account_id = ?")) {
+             PreparedStatement ps = conn.prepareStatement("SELECT balance + ? AS newbalance FROM accounts where account_id = ?")) {
             ps.setDouble(1, income);
             ps.setInt(2, id);
             ResultSet rs = ps.executeQuery();
