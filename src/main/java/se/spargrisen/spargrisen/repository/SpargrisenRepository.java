@@ -16,6 +16,7 @@ public interface SpargrisenRepository {
     List<Budget> getBudgets(int user_id, LocalDate budget_date);
     User registerNewUser(String username, String password, String name);
     void registerNewAccount(int user_ID);
+    boolean registerStandardCategory(int user_ID, int category_ID);
     boolean registerNewBudget(int user_ID, Budget budget);
     boolean updateBudget(int user_ID, Budget budget);
     Budget budgetExist(LocalDate budget_date, int user_ID, int category_ID);

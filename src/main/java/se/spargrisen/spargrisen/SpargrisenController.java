@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,38 +87,49 @@ public class SpargrisenController {
     }
 
     @PostMapping("/homepage/chooseBudgetDate")
-    public ModelAndView chooseBudgetDate(HttpSession session, @RequestParam String budgetYear, @RequestParam String budgetMonth) {
-        int year = Integer.parseInt(budgetYear);
-        int month = Integer.parseInt(budgetMonth);
-        LocalDate chosenDate = LocalDate.of(year, month, 01);
+    public ModelAndView updateBudgetListHomePage(HttpSession session, @RequestParam String budgetYear, @RequestParam String budgetMonth) {
+        LocalDate chosenDate = parseChosenBudgetDate(budgetYear, budgetMonth);
         session.setAttribute("chosenBudgetDate", chosenDate);
         return new ModelAndView("redirect:/homepage");
     }
 
     @GetMapping("/budget")
-    public ModelAndView budget() {
-        return new ModelAndView("budget");
+    public ModelAndView budget(HttpSession session) {
+        Account account = repository.getAccount((int) session.getAttribute("user_ID"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate currentBudgetDate = LocalDate.parse(session.getAttribute("currentBudgetDate").toString(), formatter);
+        LocalDate chosenBudgetDate = LocalDate.parse(session.getAttribute("chosenBudgetDate").toString(), formatter);
+        List<Category> categories = repository.getCategories((int) session.getAttribute("user_ID"));
+        List<Budget> budgets = repository.getBudgets((int) session.getAttribute("user_ID"), chosenBudgetDate);
+        return new ModelAndView("budget")
+                .addObject("user_ID", session.getAttribute("user_ID"))
+                .addObject("user_name", session.getAttribute("user_name"))
+                .addObject("currentBudgetDate", currentBudgetDate)
+                .addObject("chosenBudgetDate", chosenBudgetDate)
+                .addObject("account", account)
+                .addObject("categories", categories)
+                .addObject("budgets", budgets);
     }
 
-    @PostMapping("/budget")
-    public ModelAndView budget(@RequestParam String income) {
-
-        double income2 = Double.parseDouble(income);
-        Account account = repository.getAccount(1);
-        double newbalance = account.getBalance() + income2;
-
-        Map<String, Integer> budgettable = new HashMap<>();
-        budgettable.put("Boende", 5000);
-        budgettable.put("Livsmedel", 2000);
-        budgettable.put("Avgifter", 100);
-        budgettable.put("Telefoni", 1500);
-        budgettable.put("Nöje", 260);
-        budgettable.put("Övrigt", 5400);
-
-        return new ModelAndView("budget")
-                .addObject("income", newbalance)
-                .addObject("Categories", repository.getAllCategories())
-                .addObject("budgettable", budgettable);
+    @PostMapping("/budget/update")
+    public ModelAndView updateBudget(HttpSession session, @RequestParam Map<String, String> allRequestParams) {
+        List<Budget> budgetsToUpdate = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate chosenBudgetDate = LocalDate.parse(session.getAttribute("chosenBudgetDate").toString(), formatter);
+        int userID = (int) session.getAttribute("user_ID");
+        for (Map.Entry entry : allRequestParams.entrySet()) {
+            int categoryID = Integer.parseInt(entry.getKey().toString());
+            double ammount = Double.parseDouble(entry.getValue().toString());
+            Budget budget = repository.budgetExist(chosenBudgetDate, userID, categoryID);
+            if (budget != null) {
+                budget.setAmmount(ammount);
+                repository.updateBudget(userID, budget);
+            } else {
+                budget = new Budget(0, categoryID, ammount, chosenBudgetDate, "");
+                repository.registerNewBudget(userID, budget);
+            }
+        }
+        return new ModelAndView("redirect:/budget");
     }
 
     @PostMapping("/transaction")
@@ -127,10 +139,11 @@ public class SpargrisenController {
         return new ModelAndView("redirect:homepage");
     }
 
-    @PostMapping("/budget/partofsum")
-    public ModelAndView partofsum(@RequestParam String partsum) {
-
-        return new ModelAndView("budget");
+    @PostMapping("/budget/chooseBudgetDate")
+    public ModelAndView updateBudgetListBudgetPage(HttpSession session, @RequestParam String budgetYear, @RequestParam String budgetMonth) {
+        LocalDate chosenDate = parseChosenBudgetDate(budgetYear, budgetMonth);
+        session.setAttribute("chosenBudgetDate", chosenDate);
+        return new ModelAndView("redirect:/budget");
     }
 
     @PostMapping("/register")
@@ -138,6 +151,9 @@ public class SpargrisenController {
         User user = repository.registerNewUser(username, password, name);
         if (user != null) {
             repository.registerNewAccount(user.getUser_ID());
+            for (int i = 1; i < 18; i++) {
+                repository.registerStandardCategory(user.getUser_ID(),i);
+            }
             session.setAttribute("user_ID", user.getUser_ID());
             session.setAttribute("user_name", user.getName());
             return new ModelAndView("redirect:homepage");
@@ -150,6 +166,11 @@ public class SpargrisenController {
         repository.deleteTransaction(deleteButton);
         return new ModelAndView("redirect:/homepage");
     }
-
+  
+      private LocalDate parseChosenBudgetDate(String budgetYear, String budgetMonth) {
+        int year = Integer.parseInt(budgetYear);
+        int month = Integer.parseInt(budgetMonth);
+        return LocalDate.of(year, month, 01);
+    }
 
 }

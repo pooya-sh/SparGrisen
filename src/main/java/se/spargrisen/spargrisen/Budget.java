@@ -36,4 +36,8 @@ public class Budget {
     public String getCategory_description() {
         return category_description;
     }
+
+    public void setAmmount(double ammount) {
+        this.ammount = ammount;
+    }
 }
