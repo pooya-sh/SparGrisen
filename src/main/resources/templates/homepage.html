@@ -14,7 +14,8 @@
                 <img src="..\src\main\resources\img\piggybank.jpg" height="100" width="175" alt="Spargris"/>
             </div>
             <div class="col-8">
-                <h1>Välkommen till Spargrisen</h1>
+                <h1>Spargrisen</h1>
+                <h2>Håller koll på din budget</h2>
             </div>
             <div class="col-2">
                 <p th:text="'Hej ' + ${user_name} + '!'"></p>
@@ -22,10 +23,8 @@
         </div>
         <div class="row">
             <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex flex-row-reverse col-12">
-                <button class="p-2 btn btn-light" type="button" onClick="location.href='/logout.html'">Logga ut</button>
-                <button class="p-2 btn btn-light" type="button" onClick="location.href='/budget.html'">Skapa din
-                    budget
-                </button>
+                <button class="p-2 btn btn-light" type="button" onClick="location.href='/logout'">Logga ut</button>
+                <button class="p-2 btn btn-light" type="button" onClick="location.href='/budget'">Skapa budget</button>
             </nav>
         </div>
     </header>
