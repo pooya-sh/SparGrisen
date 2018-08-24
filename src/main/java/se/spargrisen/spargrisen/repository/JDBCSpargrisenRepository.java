@@ -44,14 +44,15 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
     }
 
     @Override
-    public List<Budget> getBudgets(int user_ID) {
+    public List<Budget> getBudgets(int user_ID, LocalDate budget_date) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(
                      "SELECT b.budget_ID, b.category_ID, b.ammount, b.budget_date, c.name " +
                              "FROM budgets AS b " +
                              "INNER JOIN categories AS c ON b.category_ID = c.category_ID " +
-                             "WHERE b.user_ID = ?")) {
+                             "WHERE b.user_ID = ? AND b.budget_date = ?")) {
             ps.setInt(1, user_ID);
+            ps.setDate(2, Date.valueOf(budget_date));
             ResultSet rs = ps.executeQuery();
             List<Budget> budgets = new ArrayList<>();
             while (rs.next()) {

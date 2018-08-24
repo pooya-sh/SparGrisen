@@ -13,7 +13,7 @@ public interface SpargrisenRepository {
     List<Category> getAllCategories();
     Account getAccount(int userId);
     List<Transaction> getTransactions(int account_id);
-    List<Budget> getBudgets(int user_id);
+    List<Budget> getBudgets(int user_id, LocalDate budget_date);
     User registerNewUser(String username, String password, String name);
     void registerNewAccount(int user_ID);
     boolean registerNewBudget(int user_ID, Budget budget);
