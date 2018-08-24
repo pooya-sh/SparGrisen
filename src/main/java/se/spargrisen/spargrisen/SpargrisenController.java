@@ -1,5 +1,6 @@
 package se.spargrisen.spargrisen;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,8 @@ import se.spargrisen.spargrisen.repository.JDBCSpargrisenRepository;
 
 import javax.servlet.http.HttpSession;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +34,7 @@ public class SpargrisenController {
     }
 
     @GetMapping("/test")
-    public ModelAndView test(){
+    public ModelAndView test() {
         List<Transaction> transactions = repository.getTransactions(1);
         System.out.println(transactions.size());
         return new ModelAndView("test")
@@ -50,9 +53,14 @@ public class SpargrisenController {
     @PostMapping("/login")
     public ModelAndView submit(HttpSession session, @RequestParam String inUsername, @RequestParam String inPassword) {
         User user = repository.checkUsernamePassword(inUsername, inPassword);
-        if(user != null){
+        if (user != null) {
             session.setAttribute("user_ID", user.getUser_ID());
             session.setAttribute("user_name", user.getName());
+            int year = LocalDate.now().getYear();
+            int month = LocalDate.now().getMonthValue();
+            int day = LocalDate.now().getDayOfMonth();
+            session.setAttribute("currentBudgetDate", LocalDate.of(year, month, day));
+            session.setAttribute("chosenBudgetDate", LocalDate.of(year, month, 01));
             return new ModelAndView("redirect:homepage");
         }
         return new ModelAndView("login");
@@ -60,12 +68,30 @@ public class SpargrisenController {
 
     @GetMapping("/homepage")
     public ModelAndView homepage(HttpSession session) {
-        Account account = repository.getAccount((int)session.getAttribute("user_ID"));
+        Account account = repository.getAccount((int) session.getAttribute("user_ID"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate currentBudgetDate = LocalDate.parse(session.getAttribute("currentBudgetDate").toString(), formatter);
+        LocalDate chosenBudgetDate = LocalDate.parse(session.getAttribute("chosenBudgetDate").toString(), formatter);
+        System.out.println(chosenBudgetDate);
+        List<Budget> budgets = repository.getBudgets((int) session.getAttribute("user_ID"), chosenBudgetDate);
         List<Transaction> transactions = repository.getTransactions(account.getAccountID());
         return new ModelAndView("homepage")
-                .addObject("user_ID",session.getAttribute("user_ID"))
-                .addObject("user_name",session.getAttribute("user_name"))
+                .addObject("user_ID", session.getAttribute("user_ID"))
+                .addObject("user_name", session.getAttribute("user_name"))
+                .addObject("currentBudgetDate", currentBudgetDate)
+                .addObject("chosenBudgetDate", chosenBudgetDate)
+                .addObject("account", account)
+                .addObject("budgets", budgets)
                 .addObject("transactions", transactions);
+    }
+
+    @PostMapping("/homepage/chooseBudgetDate")
+    public ModelAndView chooseBudgetDate(HttpSession session, @RequestParam String budgetYear, @RequestParam String budgetMonth) {
+        int year = Integer.parseInt(budgetYear);
+        int month = Integer.parseInt(budgetMonth);
+        LocalDate chosenDate = LocalDate.of(year, month, 01);
+        session.setAttribute("chosenBudgetDate", chosenDate);
+        return new ModelAndView("redirect:/homepage");
     }
 
     @GetMapping("/budget")
@@ -103,7 +129,7 @@ public class SpargrisenController {
     @PostMapping("/register")
     public ModelAndView register(HttpSession session, @RequestParam String username, @RequestParam String password, @RequestParam String name) {
         User user = repository.registerNewUser(username, password, name);
-        if(user != null) {
+        if (user != null) {
             repository.registerNewAccount(user.getUser_ID());
             session.setAttribute("user_ID", user.getUser_ID());
             session.setAttribute("user_name", user.getName());
@@ -111,7 +137,6 @@ public class SpargrisenController {
         }
         return new ModelAndView("login");
     }
-
 
 
 }
