@@ -138,5 +138,11 @@ public class SpargrisenController {
         return new ModelAndView("login");
     }
 
+    @PostMapping("/homepage/deleteTransaction")
+    public ModelAndView deleteTransaction(@RequestParam int deleteButton) {
+        repository.deleteTransaction(deleteButton);
+        return new ModelAndView("redirect:/homepage");
+    }
+
 
 }

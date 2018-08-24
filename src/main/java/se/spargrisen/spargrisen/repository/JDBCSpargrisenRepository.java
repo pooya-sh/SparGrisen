@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import se.spargrisen.spargrisen.*;
 
 import javax.sql.DataSource;
+import javax.swing.text.TabableView;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -270,6 +271,20 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
         }
     }
 
+    @Override
+    public boolean deleteTransaction(int transaction_ID) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM transactions WHERE transaction_ID =?")) {
+            ps.setInt(1, transaction_ID);
+            int rs = ps.executeUpdate();
+            if (rs < 1)
+                throw new SpargrisenRepositoryExeption("Could not delete");
+            else return true;
+        } catch (SQLException e) {
+            throw new SpargrisenRepositoryExeption(e);
+        }
+    }
+
     private User rsUser(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("User_ID"),
@@ -298,11 +313,11 @@ public class JDBCSpargrisenRepository implements SpargrisenRepository {
 
     private Budget rsBudget(ResultSet rs) throws SQLException {
         return new Budget(
-            rs.getInt("budget_ID"),
-            rs.getInt("category_ID"),
-            rs.getDouble("ammount"),
-            rs.getDate("budget_date").toLocalDate(),
-            rs.getString("name")
+                rs.getInt("budget_ID"),
+                rs.getInt("category_ID"),
+                rs.getDouble("ammount"),
+                rs.getDate("budget_date").toLocalDate(),
+                rs.getString("name")
         );
     }
 }
