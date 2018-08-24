@@ -120,6 +120,13 @@ public class SpargrisenController {
                 .addObject("budgettable", budgettable);
     }
 
+    @PostMapping("/transaction")
+    public ModelAndView transaction(@RequestParam int account, @RequestParam double ammount, @RequestParam LocalDate date, @RequestParam String description) {
+        Transaction transaction = new Transaction(0, account, 1, date, ammount, description, "" );
+        repository.registerNewTransaction(transaction);
+        return new ModelAndView("redirect:homepage");
+    }
+
     @PostMapping("/budget/partofsum")
     public ModelAndView partofsum(@RequestParam String partsum) {
 

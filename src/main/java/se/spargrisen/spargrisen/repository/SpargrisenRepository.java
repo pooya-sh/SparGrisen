@@ -19,4 +19,5 @@ public interface SpargrisenRepository {
     boolean registerNewBudget(int user_ID, Budget budget);
     boolean updateBudget(int user_ID, Budget budget);
     Budget budgetExist(LocalDate budget_date, int user_ID, int category_ID);
+    Transaction registerNewTransaction(Transaction transaction);
 }
