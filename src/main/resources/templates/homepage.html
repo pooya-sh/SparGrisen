@@ -115,10 +115,7 @@
                         </th>
                         <th scope="col">
                             <select>
-                                <option value="Boende">Boende</option>
-                                <option value="Transport">Transport</option>
-                                <option value="Shopping">Shopping</option>
-                                <option value="Livsmedel">Livsmedel</option>
+                                <option th:each="Category : ${categories}" th:value="${Category.getID()}" th:text="${Category.getNAME()}"></option>
                             </select>
                         </th>
                         <th scope="col">
